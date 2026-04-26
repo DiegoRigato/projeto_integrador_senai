@@ -19,7 +19,7 @@ def cadastrar_colaborador(request):
                 cargo=request.POST.get('cargo'),
                 setor=request.POST.get('setor')
             )
-            messages.success(request, 'Colaborador cadastrado com sucesso!') # Requisito 38
+            messages.success(request, 'Colaborador cadastrado com sucesso!') 
         except:
             messages.error(request, 'Erro ao cadastrar. Verifique os dados.')
         return redirect('cadastrar_colaborador') # Requisito 39
