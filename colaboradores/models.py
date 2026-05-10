@@ -16,8 +16,7 @@ class Colaborador(models.Model):
 class Equipamento(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.TextField(blank=True, null=True)
-    ca_numero = models.CharField(max_length=50, verbose_name="Número do CA") # Certificado de Aprovação
-
+    ca_numero = models.CharField(max_length=50, verbose_name="Número do CA") 
     def __str__(self):
         return self.nome
 
