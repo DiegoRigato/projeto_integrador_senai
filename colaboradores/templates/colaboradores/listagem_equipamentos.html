@@ -1,0 +1,60 @@
+{% extends 'colaboradores/base.html' %}
+
+{% block conteudo %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Equipamentos Cadastrados (EPIs)</h2>
+    <a href="{% url 'cadastro_equipamento' %}" class="btn btn-primary">Novo Equipamento</a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Número do CA</th>
+                    <th>Descrição</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for equi in equipamentos %}
+                <tr>
+                    <td class="fw-bold">{{ equi.nome }}</td>
+                    <td><span class="badge bg-light text-dark border">{{ equi.ca_numero }}</span></td>
+                    <td>{{ equi.descricao|truncatechars:50 }}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ equi.id }}">
+                            🗑️ Excluir
+                        </button>
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="deleteModal{{ equi.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmar Exclusão</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-start">
+                                Tem certeza que deseja excluir o equipamento: <br>
+                                <strong class="text-danger">{{ equi.nome }}</strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <a href="{% url 'excluir_equipamento' equi.id %}" class="btn btn-danger">Confirmar Exclusão</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-4">Nenhum equipamento cadastrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

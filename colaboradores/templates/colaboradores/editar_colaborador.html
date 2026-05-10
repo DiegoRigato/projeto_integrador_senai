@@ -1,0 +1,41 @@
+{% extends 'colaboradores/base.html' %}
+
+{% block conteudo %}
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3">
+        <h4 class="mb-0 fw-bold text-dark">✏️ Editar Colaborador</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nome Completo</label>
+                    <input type="text" name="nome" class="form-control" value="{{ colaborador.nome }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">CPF</label>
+                    <input type="text" name="cpf" class="form-control" value="{{ colaborador.cpf }}" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Cargo</label>
+                    <input type="text" name="cargo" class="form-control" value="{{ colaborador.cargo }}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Setor</label>
+                    <input type="text" name="setor" class="form-control" value="{{ colaborador.setor }}" required>
+                </div>
+            </div>
+
+            <hr>
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'listagem_colaboradores' %}" class="btn btn-secondary me-2">Cancelar</a>
+                <button type="submit" class="btn btn-success px-4">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

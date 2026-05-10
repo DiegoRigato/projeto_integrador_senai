@@ -1,0 +1,29 @@
+{% extends 'colaboradores/base.html' %} {% block conteudo %}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Cadastro de Equipamento (EPI)</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nome do Equipamento</label>
+                    <input type="text" name="nome" class="form-control" required placeholder="Ex: Capacete de Segurança">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Número do CA</label>
+                    <input type="text" name="ca_numero" class="form-control" required placeholder="Certificado de Aprovação">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Descrição/Observações</label>
+                <textarea name="descricao" class="form-control" rows="3"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-success">Salvar Equipamento</button>
+            <a href="{% url 'listagem_equipamentos' %}" class="btn btn-secondary">Ver Lista</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
