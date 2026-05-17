@@ -115,7 +115,6 @@ def novo_emprestimo(request):
             if data_prevista and timezone.is_naive(data_prevista):
                 data_prevista = make_aware(data_prevista)
 
-        # Validação manual preventiva na tela (apenas para empréstimos)
         if status == 'emprestado' and data_entrega and data_prevista:
             if data_prevista < data_entrega:
                 messages.error(request, "Falha no cadastro: A data prevista para devolução deve ser posterior à data de entrega do empréstimo.")
@@ -164,7 +163,6 @@ def editar_emprestimo(request, id):
         novo_status = request.POST.get('status')
         emprestimo.status = novo_status
         
-        # Se for um status de baixa, captura os dados extras da tela
         if novo_status in ['devolvido', 'danificado', 'perdido']:
             data_efetiva_str = request.POST.get('data_efetiva')
             if data_efetiva_str:

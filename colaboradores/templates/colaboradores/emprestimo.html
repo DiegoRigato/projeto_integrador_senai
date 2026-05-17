@@ -64,19 +64,19 @@
 
     function alternarDataPrevista() {
         if (statusSelect.value === 'fornecido') {
-            blocoDataPrevista.style.display = 'none'; // Oculta o campo visualmente
-            inputDataPrevista.required = false;       // Remove a obrigatoriedade do HTML
-            inputDataPrevista.value = '';             // Limpa qualquer dado digitado nele
+            blocoDataPrevista.style.display = 'none'; 
+            inputDataPrevista.required = false;       
+            inputDataPrevista.value = '';             
         } else {
-            blocoDataPrevista.style.display = 'block';// Exibe novamente o campo
-            inputDataPrevista.required = true;        // Torna obrigatório para o status 'emprestado'
+            blocoDataPrevista.style.display = 'block';
+            inputDataPrevista.required = true;        
         }
     }
 
-    // Escuta alterações que o usuário fizer no campo de seleção
+    
     statusSelect.addEventListener('change', alternarDataPrevista);
     
-    // Executa ao carregar a página para definir o estado inicial correto
+    
     window.addEventListener('DOMContentLoaded', alternarDataPrevista);
 </script>
 {% endblock %}
