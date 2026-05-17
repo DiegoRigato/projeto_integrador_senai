@@ -1,0 +1,112 @@
+{% extends 'colaboradores/base.html' %}
+
+{% block conteudo %}
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold">⚙️ Atualizar Status de Empréstimo / Baixa de EPI</h4>
+        </div>
+        <div class="card-body">
+            <div class="row bg-light p-3 rounded mb-4 border">
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Colaborador:</strong> {{ emprestimo.colaborador.nome }}</p>
+                    <p class="mb-0"><strong>Equipamento (EPI):</strong> {{ emprestimo.equipamento.nome }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Data de Entrega:</strong> {{ emprestimo.data_entrega|date:"d/m/Y H:i" }}</p>
+                    <p class="mb-0"><strong>Prazo de Devolução:</strong> 
+                        {% if emprestimo.status == 'fornecido' %}
+                            <span class="text-muted">Não aplicável (Permanente)</span>
+                        {% else %}
+                            {{ emprestimo.data_prevista_devolucao|date:"d/m/Y H:i" }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Alterar Status do EPI</label>
+                        <select name="status" id="id_status" class="form-select" required>
+                            <option value="emprestado" {% if emprestimo.status == 'emprestado' %}selected{% endif %}>Emprestado</option>
+                            <option value="fornecido" {% if emprestimo.status == 'fornecido' %}selected{% endif %}>Fornecido (Definitivo)</option>
+                            <option value="devolvido" {% if emprestimo.status == 'devolvido' %}selected{% endif %}>Devolvido</option>
+                            <option value="danificado" {% if emprestimo.status == 'danificado' %}selected{% endif %}>Danificado</option>
+                            <option value="perdido" {% if emprestimo.status == 'perdido' %}selected{% endif %}>Perdido</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="secao-baixa" style="display: none;">
+                    <div class="row border-top pt-3 mt-2 bg-light p-3 rounded border">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-danger" id="label_data_baixa">Data Efetiva da Devolução</label>
+                            <input type="datetime-local" name="data_efetiva" id="id_data_efetiva" class="form-control" value="{{ data_efetiva_formatada }}">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">Observação / Motivo da Baixa</label>
+                            <textarea name="observacao" id="id_observacao" class="form-control" rows="3" placeholder="Ex: Devolvido com avaria no fecho traseiro...">{{ emprestimo.observacao_devolucao|default:"" }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="d-flex justify-content-start gap-2">
+                    <button type="submit" class="btn btn-primary fw-bold px-4">Salvar Alterações</button>
+                    <a href="{% url 'relatorio_emprestimos' %}" class="btn btn-secondary">Voltar ao Relatório</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const statusSelect = document.getElementById('id_status');
+    const secaoBaixa = document.getElementById('secao-baixa');
+    const inputDataEfetiva = document.getElementById('id_data_efetiva');
+    const labelDataBaixa = document.getElementById('label_data_baixa');
+    const inputObservacao = document.getElementById('id_observacao');
+
+    function gerenciarCampos() {
+        const valor = statusSelect.value;
+        
+        if (valor === 'devolvido' || valor === 'danificado' || valor === 'perdido') {
+            secaoBaixa.style.display = 'block';
+            inputDataEfetiva.required = true;
+            
+            if (valor === 'devolvido') {
+                labelDataBaixa.innerText = 'Data Efetiva da Devolução';
+                labelDataBaixa.className = 'form-label fw-bold text-success';
+                inputObservacao.placeholder = 'Ex: Equipamento devolvido higienizado e sem avarias estruturais.';
+            } else if (valor === 'danificado') {
+                labelDataBaixa.innerText = 'Data da Notificação do Ocorrido';
+                labelDataBaixa.className = 'form-label fw-bold text-warning';
+                inputObservacao.placeholder = 'Ex: Protetor auricular com a haste quebrada acidentalmente em campo.';
+            } else if (valor === 'perdido') {
+                labelDataBaixa.innerText = 'Data da Notificação do Ocorrido';
+                labelDataBaixa.className = 'form-label fw-bold text-danger';
+                inputObservacao.placeholder = 'Ex: Colaborador relatou extravio do óculos de proteção durante a mudança de setor.';
+            }
+            
+        } else {
+            secaoBaixa.style.display = 'none';
+            inputDataEfetiva.required = false;
+        }
+    }
+
+    statusSelect.addEventListener('change', gerenciarCampos);
+    window.addEventListener('DOMContentLoaded', gerenciarCampos);
+</script>
+{% endblock %}

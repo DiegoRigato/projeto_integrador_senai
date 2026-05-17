@@ -34,13 +34,15 @@
                     <label class="form-label">Data de Entrega</label>
                     <input type="datetime-local" name="data_entrega" class="form-control" value="{{ hoje }}" required>
                 </div>
-                <div class="col-md-4 mb-3">
+                
+                <div class="col-md-4 mb-3" id="bloco_data_prevista">
                     <label class="form-label">Previsão de Devolução</label>
-                    <input type="datetime-local" name="data_prevista" class="form-control" required>
+                    <input type="datetime-local" name="data_prevista" id="id_data_prevista" class="form-control" required>
                 </div>
+                
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Status Inicial</label>
-                    <select name="status" class="form-select" required>
+                    <select name="status" id="id_status" class="form-select" required>
                         <option value="emprestado">Emprestado</option>
                         <option value="fornecido">Fornecido</option>
                     </select>
@@ -50,7 +52,31 @@
             <hr>
             <button type="submit" class="btn btn-primary">Registrar Empréstimo</button>
             <a href="{% url 'listagem_colaboradores' %}" class="btn btn-secondary">Cancelar</a>
+            <a href="{% url 'relatorio_emprestimos' %}" class="btn btn-secondary">Ver Relatório</a>
         </form>
     </div>
 </div>
+
+<script>
+    const statusSelect = document.getElementById('id_status');
+    const blocoDataPrevista = document.getElementById('bloco_data_prevista');
+    const inputDataPrevista = document.getElementById('id_data_prevista');
+
+    function alternarDataPrevista() {
+        if (statusSelect.value === 'fornecido') {
+            blocoDataPrevista.style.display = 'none'; // Oculta o campo visualmente
+            inputDataPrevista.required = false;       // Remove a obrigatoriedade do HTML
+            inputDataPrevista.value = '';             // Limpa qualquer dado digitado nele
+        } else {
+            blocoDataPrevista.style.display = 'block';// Exibe novamente o campo
+            inputDataPrevista.required = true;        // Torna obrigatório para o status 'emprestado'
+        }
+    }
+
+    // Escuta alterações que o usuário fizer no campo de seleção
+    statusSelect.addEventListener('change', alternarDataPrevista);
+    
+    // Executa ao carregar a página para definir o estado inicial correto
+    window.addEventListener('DOMContentLoaded', alternarDataPrevista);
+</script>
 {% endblock %}

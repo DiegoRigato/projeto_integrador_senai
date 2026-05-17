@@ -17,20 +17,21 @@ class Equipamento(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.TextField(blank=True, null=True)
     ca_numero = models.CharField(max_length=50, verbose_name="Número do CA") 
+    
     def __str__(self):
         return self.nome
 
 #  Controle de EPI 
 class Emprestimo(models.Model):
     STATUS_CHOICES = [
-        ('emprestado', 'Emprestado'),
-        ('fornecido', 'Fornecido'),
-        ('devolvido', 'Devolvido'),
-        ('danificado', 'Danificado'),
-        ('perdido', 'Perdido'),
+        ('emprestado', 'Emprestado'), 
+        ('fornecido', 'Fornecido'), 
+        ('devolvido', 'Devolvido'), 
+        ('danificado', 'Danificado'), 
+        ('perdido', 'Perdido'), 
     ]
 
-    colaborador = models.ForeignKey(Colaborador, on_delete=models.CASCADE)
+    colaborador = models.ForeignKey(Colaborador, on_delete=models.CASCADE) 
     equipamento = models.ForeignKey(Equipamento, on_delete=models.CASCADE)  
     data_entrega = models.DateTimeField(default=timezone.now) 
     data_prevista_devolucao = models.DateTimeField() 
@@ -38,10 +39,17 @@ class Emprestimo(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='emprestado') 
     observacao_devolucao = models.TextField(blank=True, null=True) 
 
-    #  Validação da Data Prevista 
+   #  Validações das Datas
     def clean(self):
-        if self.data_prevista_devolucao and self.data_prevista_devolucao <= timezone.now():
-            raise ValidationError('A data prevista para devolução deve ser posterior à data atual.')
+        super().clean()
+        
+        # As validações de prazo abaixo SÓ se aplicam se o item for um empréstimo temporário
+        if self.status == 'emprestado':
+            # 1. Validação Data prevista posterior ao momento atual 
+            if self.data_prevista_devolucao and self.data_prevista_devolucao <= timezone.now():
+                raise ValidationError('A data prevista para devolução deve ser posterior à data atual.')
 
-    def __str__(self):
-        return f"{self.colaborador.nome} - {self.equipamento.nome}"
+            # 2. VALIDAÇÃO DE SEGURANÇA: Impedir devolução retroativa à data de entrega
+            if self.data_entrega and self.data_prevista_devolucao:
+                if self.data_prevista_devolucao < self.data_entrega:
+                    raise ValidationError('A data prevista para devolução não pode ser anterior à data de entrega do EPI.')
