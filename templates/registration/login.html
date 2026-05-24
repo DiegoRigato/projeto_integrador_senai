@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Controle de EPI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .login-container {
+            height: 100vh;
+        }
+        .brand-section {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            padding: 3rem;
+        }
+        .form-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            padding: 3rem;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+        }
+        .form-control {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #64748b;
+            box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
+        }
+        .btn-login {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            background-color: #0f172a;
+            border: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-login:hover {
+            background-color: #1e293b;
+            transform: translateY(-1px);
+        }
+        .brand-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        @media (max-width: 768px) {
+            .brand-section {
+                display: none !important;
+            }
+            .form-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid p-0">
+    <div class="row g-0 login-container">
+        
+        <div class="col-md-6 col-lg-7 brand-section d-none d-md-flex position-relative">
+            <div class="text-center z-1">
+                <i class="bi bi-shield-check brand-icon text-info"></i>
+                <h1 class="display-4 fw-bold mb-3">Protekta</h1>
+                <p class="lead text-white-50 max-w-md">Gerencie seus colaboradores e o controle de EPIs com total segurança e rastreabilidade.</p>
+            </div>
+            <div class="position-absolute bottom-0 start-0 m-4 text-white-50 small opacity-50">
+                <span class="fw-semibold">Módulo de Segurança Integrado v3.0</span>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-5 form-section">
+            <div class="login-card px-3">
+                
+                <div class="mb-5">
+                    <h2 class="fw-bold text-dark mb-2">Seja bem-vindo</h2>
+                    <p class="text-muted">Insira suas credenciais de operador para acessar o painel administrativo.</p>
+                </div>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger border-0 shadow-sm d-flex align-items-center rounded-3 mb-4" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                        <div class="small fw-semibold">Usuário ou senha inválidos. Tente novamente.</div>
+                    </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label fw-semibold small text-secondary">Usuário</label>
+                        <div class="input-group">
+                            <input type="text" name="username" id="id_username" class="form-control" placeholder="Ex: operador" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label fw-semibold small text-secondary">Senha</label>
+                        <div class="input-group">
+                            <input type="password" name="password" id="id_password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input type="checkbox" name="remember_me" id="id_remember_me" class="form-check-input border-secondary-subtle">
+                            <label class="form-check-label small text-muted user-select-none" for="id_remember_me">
+                                Manter conectado neste computador
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-dark btn-login text-white shadow-sm d-flex align-items-center justify-content-center gap-2">
+                            <span>Acessar o Painel</span>
+                            <i class="bi bi-arrow-right-short fs-4"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center pt-4 border-top border-light-subtle">
+                    <p class="text-muted small mb-0">Projeto Integrador — Sistema de Gestão Interna</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

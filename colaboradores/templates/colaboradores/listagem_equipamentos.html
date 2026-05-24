@@ -3,7 +3,7 @@
 {% block conteudo %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-bold">Equipamentos Cadastrados (EPIs)</h2>
-    <a href="{% url 'cadastro_equipamento' %}" class="btn btn-primary">Novo Equipamento</a>
+    <a href="{% url 'novo_equipamento' %}" class="btn btn-dark">Novo Equipamento</a>
 </div>
 
 <div class="card shadow-sm border-0">
@@ -30,24 +30,23 @@
                     </td>
                 </tr>
 
-                <div class="modal fade" id="deleteModal{{ equi.id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Confirmar Exclusão</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-start">
-                                Tem certeza que deseja excluir o equipamento: <br>
-                                <strong class="text-danger">{{ equi.nome }}</strong>?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <a href="{% url 'excluir_equipamento' equi.id %}" class="btn btn-danger">Confirmar Exclusão</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="modal fade" id="deleteModal{{ equi.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="close" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem a certeza que deseja excluir o equipamento <strong>{{ equi.nome }}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="{% url 'excluir_equipamento' equi.id %}" class="btn btn-danger">Confirmar Exclusão</a>
+            </div>
+        </div>
+    </div>
+</div>
                 {% empty %}
                 <tr>
                     <td colspan="4" class="text-center text-muted py-4">Nenhum equipamento cadastrado.</td>

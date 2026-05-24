@@ -16,8 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from colaboradores.forms import FormLoginPersonalizado
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('colaboradores/', include('colaboradores.urls'))
+    
+    path('', auth_views.LoginView.as_view(authentication_form=FormLoginPersonalizado), name='login'),
+    
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    
+    path('colaboradores/', include('colaboradores.urls')),
 ]

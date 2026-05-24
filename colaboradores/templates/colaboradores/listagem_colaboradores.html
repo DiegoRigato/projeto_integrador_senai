@@ -4,13 +4,13 @@
 <div class="card shadow-sm">
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
         <h4 class="mb-0 fw-bold text-dark">Equipe de Colaboradores</h4>
-        <a href="{% url 'cadastrar_colaborador' %}" class="btn btn-primary btn-sm">+ Novo Colaborador</a>
+        <a href="{% url 'novo_colaborador' %}" class="btn btn-dark btn-sm">+ Novo Colaborador</a>
     </div>
     <div class="card-body">
         
         <form method="GET" class="mb-4">
             <div class="input-group">
-                <input type="text" name="nome" class="form-control" placeholder="Pesquisar por nome..." value="{{ request.GET.nome }}">
+                <input type="text" name="colaborador" class="form-control" placeholder="Pesquisar por nome..." value="{{ request.GET.colaborador|default:'' }}">
                 <button class="btn btn-outline-secondary" type="submit">🔍 Buscar</button>
             </div>
         </form>
@@ -30,11 +30,11 @@
                     {% for colaborador in colaboradores %}
                     <tr>
                         <td class="fw-bold">{{ colaborador.nome }}</td>
-                        <td>{{ colaborador.cpf }}</td>
-                        <td><span class="badge bg-light text-dark border">{{ colaborador.cargo }}</span></td>
-                        <td>{{ colaborador.setor }}</td>
+                        <td>{{ colaborador.cpf|default:"-" }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ colaborador.cargo|default:"-" }}</span></td>
+                        <td>{{ colaborador.setor|default:"-" }}</td>
                         <td class="text-center">
-                            <a href="{% url 'editar_colaborador' colaborador.id %}" class="btn btn-sm btn-outline-primary me-1" title="Editar"><span class="bi bi-pencil">✏️</span></a>   
+                            <a href="{% url 'editar_colaborador' colaborador.id %}" class="btn btn-sm btn-outline-primary me-1" title="Editar">✏️</a>   
                             <a href="{% url 'excluir_colaborador' colaborador.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Deseja excluir este colaborador?')">🗑️</a>
                         </td>
                     </tr>

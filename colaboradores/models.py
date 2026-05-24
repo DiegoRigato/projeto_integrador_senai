@@ -45,11 +45,11 @@ class Emprestimo(models.Model):
         
         # As validações de prazo abaixo SÓ se aplicam se o item for um empréstimo temporário
         if self.status == 'emprestado':
-            # 1. Validação Data prevista posterior ao momento atual 
+            # Data prevista posterior ao momento atual
             if self.data_prevista_devolucao and self.data_prevista_devolucao <= timezone.now():
                 raise ValidationError('A data prevista para devolução deve ser posterior à data atual.')
 
-            # 2. VALIDAÇÃO DE SEGURANÇA: Impedir devolução retroativa à data de entrega
+            # Impedir devolução retroativa à data de entrega
             if self.data_entrega and self.data_prevista_devolucao:
                 if self.data_prevista_devolucao < self.data_entrega:
                     raise ValidationError('A data prevista para devolução não pode ser anterior à data de entrega do EPI.')

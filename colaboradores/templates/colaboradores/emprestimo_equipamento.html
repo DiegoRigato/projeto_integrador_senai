@@ -1,0 +1,89 @@
+{% extends 'colaboradores/base.html' %}
+
+{% block conteudo %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0" style="max-width: 700px; margin: 0 auto;">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0 fw-bold">📦 Registrar Novo Empréstimo / Fornecimento de EPI</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="colaborador" class="form-label fw-bold text-secondary">Colaborador</label>
+                    <select name="colaborador" id="colaborador" class="form-select" required>
+                        <option value="" disabled selected>Selecione o funcionário...</option>
+                        {% for colaborador in colaboradores %}
+                            <option value="{{ colaborador.id }}">{{ colaborador.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="equipamento" class="form-label fw-bold text-secondary">Equipamento (EPI)</label>
+                    <select name="equipamento" id="equipamento" class="form-select" required>
+                        <option value="" disabled selected>Selecione o EPI...</option>
+                        {% for equipamento in equipamentos %}
+                            <option value="{{ equipamento.id }}">{{ equipamento.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label fw-bold text-secondary">Tipo de Entrega</label>
+                    <select name="status" id="status" class="form-select" required onchange="togglePrazoField()">
+                        <option value="emprestado" selected>Emprestado (Exige devolução)</option>
+                        <option value="fornecido">Fornecido (Definitivo / Permanente)</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="data_entrega" class="form-label fw-bold text-secondary">Data de Entrega</label>
+                        <input type="datetime-local" name="data_entrega" id="data_entrega" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3" id="secao-prazo">
+                        <label for="data_prevista" class="form-label fw-bold text-secondary">Previsão de Devolução</label>
+                        <input type="datetime-local" name="data_prevista" id="data_prevista" class="form-control">
+                    </div>
+                </div>
+
+                <hr class="text-secondary-50 mt-4">
+
+                <div class="d-flex justify-content-start gap-2">
+                    <button type="submit" class="btn btn-success fw-bold px-4 shadow-sm">Confirmar Registro</button>
+                    <a href="{% url 'relatorio_emprestimos' %}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePrazoField() {
+        const status = document.getElementById('status').value;
+        const secaoPrazo = document.getElementById('secao-prazo');
+        const inputPrazo = document.getElementById('data_prevista');
+
+        if (status === 'fornecido') {
+            secaoPrazo.style.display = 'none';
+            inputPrazo.required = false;
+            inputPrazo.value = '';
+        } else {
+            secaoPrazo.style.display = 'block';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Preenche automaticamente a data de entrega com o momento atual
+        const inputEntrega = document.getElementById('data_entrega');
+        if (!inputEntrega.value) {
+            const agora = new Date();
+            agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+            inputEntrega.value = agora.toISOString().slice(0, 16);
+        }
+        togglePrazoField();
+    });
+</script>
+{% endblock %}
